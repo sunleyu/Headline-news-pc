@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  Headline news-pc
+  Headline news-pc<el-button type="success">成功按钮</el-button>
   </div>
 </template>
 
