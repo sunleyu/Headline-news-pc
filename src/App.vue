@@ -1,17 +1,15 @@
 <template>
   <div id="app">
-  Headline news-pc<el-button type="success">成功按钮</el-button>
+  <router-view />
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'app',
-  components: {
-
-  }
+  name: 'app'
 }
+
 </script>
 
 <style lang="less">
