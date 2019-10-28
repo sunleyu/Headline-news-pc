@@ -11,10 +11,10 @@ const local = {
   // 获取
   getUser () {
     const jsonStr = window.sessionStorage.getItem(key)
-    return JSON.stringify(jsonStr)
+    return JSON.parse(jsonStr)
   },
   // 清除
-  DefaultSerializer () {
+  delUser () {
     window.sessionStorage.removeItem(key)
   }
 }
