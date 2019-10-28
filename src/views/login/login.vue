@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <img src="../../assets/logo_index.png" alt />
       <!-- 表单 -->
-      <el-form ref="LoginForm" status-icon :model="loginForm" :rules="checkLogin" >
+      <el-form ref="form" status-icon :model="loginForm" :rules="checkLogin" >
         <el-form-item prop="mobile" >
           <el-input  v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -66,7 +66,7 @@ export default {
   methods: {
     // 校验整体表单
     submitForm () {
-      this.$refs['LoginForm'].validate((valid) => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$http.post('authorizations', this.loginForm).then((res) => {
             // 编程式导航

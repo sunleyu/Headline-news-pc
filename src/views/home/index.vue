@@ -10,6 +10,7 @@
         :collapse-transition="false"
         active-text-color="#ffd04b"
         style="border-right:none"
+        router
       >
         <el-menu-item index="/" class="first-item">
           <i class="el-icon-s-home"></i>
@@ -132,5 +133,4 @@ export default {
     margin-right: 28px;
   }
 }
-
 </style>
