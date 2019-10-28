@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import local from '@/utils/store'
 export default {
   data () {
     // 校验手机号
@@ -70,6 +71,8 @@ export default {
         if (valid) {
           this.$http.post('authorizations', this.loginForm).then((res) => {
             // 编程式导航
+            // 保存用户信息 token
+            local.setUser(res.data.data)
             this.$router.push('/')
           }).catch(() => {
             this.$message.error('手机或验证码错误')
