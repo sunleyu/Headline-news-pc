@@ -48,13 +48,16 @@
         <span class="text">未来万里晴空</span>
         <el-dropdown class="dropdown">
           <span class="el-dropdown-link">
-            <img class="headIcon" src="../../assets/avatar.jpg" alt />
-            用户名称
+            <img class="headIcon" :src="userInfo.photo" alt />
+            {{userInfo.name}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+          <el-dropdown-menu slot="dropdown" @command="handleClick">
+            <!-- <el-dropdown-menu slot="dropdown"> -->
+            <!-- <el-dropdown-item icon="el-icon-setting" @click.native="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock"  @click.native="loginOut">退出登录</el-dropdown-item>-->
+            <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" command="loginOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -66,17 +69,35 @@
 </template>
 
 <script>
+import local from '@/utils/store.js'
 export default {
   data () {
     return {
-      isCollapse: true
+      isCollapse: true,
+      userInfo: {}
     }
+  },
+  created () {
+    const user = local.getUser() || ''
+    this.userInfo.name = user.name
+    this.userInfo.photo = user.photo
   },
   methods: {
     toggleMenu () {
       // 切换左菜单 展开与收起
       this.isCollapse = !this.isCollapse
       console.log(this.isCollapse)
+    },
+    setting () {
+      this.$router.push('/setting')
+    },
+    loginOut () {
+      local.delUser()
+      this.$router.push('/login')
+    },
+    handleClick (command) {
+      // this[setting]()=>this.setting()
+      this[command]()
     }
   }
 }
