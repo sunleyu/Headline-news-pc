@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/login/login.vue'
 import Home from '../views/home/index.vue'
 import Welcome from '@/views/welcome'
+import Article from '@/views/article'
 import NotFound from '@/views/notFound'
 import local from '@/utils/store'
 
@@ -14,7 +15,9 @@ const router = new VueRouter({
       component: Home,
       children: [
         // 欢迎
-        { path: '/', component: Welcome }
+        { path: '/', component: Welcome },
+        // 文章管理
+        { path: '/article', component: Article }
       ]
     },
     {

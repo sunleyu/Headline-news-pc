@@ -3,7 +3,7 @@
     <el-aside :width="isCollapse? '200px':'64px'">
       <div class="logo" :class="{smallLogo:!isCollapse}"></div>
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         background-color="#233346"
         text-color="#fff"
         :collapse="!isCollapse"
@@ -46,13 +46,13 @@
       <el-header>
         <span class="el-icon-s-fold icon" @click="toggleMenu"></span>
         <span class="text">未来万里晴空</span>
-        <el-dropdown class="dropdown">
+        <el-dropdown class="dropdown"  @command="handleClick">
           <span class="el-dropdown-link">
             <img class="headIcon" :src="userInfo.photo" alt />
             {{userInfo.name}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown" @command="handleClick">
+          <el-dropdown-menu slot="dropdown">
             <!-- <el-dropdown-menu slot="dropdown"> -->
             <!-- <el-dropdown-item icon="el-icon-setting" @click.native="setting">个人设置</el-dropdown-item>
             <el-dropdown-item icon="el-icon-unlock"  @click.native="loginOut">退出登录</el-dropdown-item>-->
