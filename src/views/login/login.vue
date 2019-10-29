@@ -3,9 +3,9 @@
     <el-card class="box-card">
       <img src="../../assets/logo_index.png" alt />
       <!-- 表单 -->
-      <el-form ref="form" status-icon :model="loginForm" :rules="checkLogin" >
-        <el-form-item prop="mobile" >
-          <el-input  v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
+      <el-form ref="form" status-icon :model="loginForm" :rules="checkLogin">
+        <el-form-item prop="mobile">
+          <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item prop="code">
           <el-input
@@ -59,7 +59,6 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' }, // 自定义校验
           { len: 6, message: '验证码不正确', trigger: 'blur' }
           // { validator: checkCode, trigger: 'blur' }
-
         ]
       }
     }
@@ -67,25 +66,34 @@ export default {
   methods: {
     // 校验整体表单
     submitForm () {
-      this.$refs['form'].validate((valid) => {
+      this.$refs['form'].validate(async valid => {
+        // if (valid) {
+        //   this.$http.post('authorizations', this.loginForm).then((res) => {
+        //     // 编程式导航
+        //     // 保存用户信息 token
+        //     local.setUser(res.data.data)
+        //     this.$router.push('/')
+        //   }).catch(() => {
+        //     this.$message.error('手机或验证码错误')
+        //   })
+        // } else {
+        //   console.log('err')
+        // }
         if (valid) {
-          this.$http.post('authorizations', this.loginForm).then((res) => {
-            // 编程式导航
-            // 保存用户信息 token
-            local.setUser(res.data.data)
+          try {
+            const {
+              data: { data }
+            } = await this.$http.post('authorizations', this.loginForm)
+            local.setUser(data)
             this.$router.push('/')
-          }).catch(() => {
+          } catch (e) {
             this.$message.error('手机或验证码错误')
-          })
-        } else {
-          console.log('err')
+          }
         }
       })
     }
   }
-
 }
-
 </script>
 <style scoped lang='less'>
 /* // 全屏容器 */
@@ -107,7 +115,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  img{
+  img {
     display: block;
     margin: 0 auto 30px;
   }
