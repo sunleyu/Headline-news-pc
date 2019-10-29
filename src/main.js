@@ -5,10 +5,11 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from '@/router'
 import axios from '@/api'
+import myBread from '@/components/my-bread'
+Vue.component('my-bread', myBread)
 Vue.use(ElementUI)
 // axios 全局挂载
 Vue.prototype.$http = axios
-
 Vue.config.productionTip = false
 new Vue({
   router,
