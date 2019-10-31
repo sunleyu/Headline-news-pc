@@ -161,6 +161,11 @@ export default {
     handleEdit (id) {
       // this.$router.push('/publish?id=' + id)
       this.$router.push({ path: '/publish', query: { id } })
+    },
+    async handleDelete (id) {
+      await this.$http.delete(`articles/${id}`)
+      this.$message.success('删除文章成功')
+      this.getArticles()
     }
   }
 }
