@@ -48,7 +48,7 @@
       <div slot="content" slot-scope='scope'>{{scope.pn+scope.test}}</div>
       <div slot="footer">456</div>
     </page>-->
-    <el-card>
+    <el-button>
       <div slot="header">
         <span>根据筛选条件共查询到 {{total}}条结果</span>
       </div>
@@ -80,8 +80,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
-    </el-card>
+      <el-pagination
+        style="margin-top:20px"
+        :current-page="reqParams.page"
+        :size-change="reqParams.per_page"
+        background
+        layout="prev, pager, next"
+        :total="total"
+        @current-change="pager"
+      ></el-pagination>
+    </el-button>
   </div>
 </template>
 
@@ -123,6 +131,10 @@ export default {
       } = await this.$http.get('articles', { params: this.reqParams })
       this.articlesList = data.results
       this.total = data.total_count
+    },
+    pager (newPage) {
+      this.reqParams.page = newPage
+      this.getArticles()
     }
   }
 }
