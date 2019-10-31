@@ -17,7 +17,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道:">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <el-select v-model="reqParams.channel_id" clearable placeholder="请选择">
             <el-option
               v-for="item in ChannelOptions"
               :key="item.id"
@@ -34,11 +34,13 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @change="changeDate"
+              value-format="yyyy-MM-dd"
             ></el-date-picker>
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="search">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,7 +50,7 @@
       <div slot="content" slot-scope='scope'>{{scope.pn+scope.test}}</div>
       <div slot="footer">456</div>
     </page>-->
-    <el-button>
+    <el-card style="width: 100%;">
       <div slot="header">
         <span>根据筛选条件共查询到 {{total}}条结果</span>
       </div>
@@ -75,21 +77,21 @@
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" @click="handleEdit(scope.row.id)" icon="el-icon-edit">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
         style="margin-top:20px"
-        :current-page="reqParams.page"
-        :size-change="reqParams.per_page"
         background
         layout="prev, pager, next"
         :total="total"
+        :page-size="reqParams.per_page"
+        :current-page="reqParams.page"
         @current-change="pager"
       ></el-pagination>
-    </el-button>
+    </el-card>
   </div>
 </template>
 
@@ -135,6 +137,30 @@ export default {
     pager (newPage) {
       this.reqParams.page = newPage
       this.getArticles()
+    },
+    search () {
+      if (this.reqParams.channel_id === '') this.reqParams.channel_id = null
+      // 回到第一页
+      this.reqParams.page = 1
+      this.getArticles()
+    },
+    // 选择日期触发的事件函数
+    changeDate (dateArr) {
+      // dateArr 的数据格式：[date,date]
+      // 后端需要的是字符串格   dateArr 的数据格式：[string,string]
+      // 注意：清除选择的日期后  dateArr的值 null
+      console.log(dateArr)
+      if (dateArr) {
+        this.reqParams.begin_pubdate = dateArr[0]
+        this.reqParams.end_pubdate = dateArr[1]
+      } else {
+        this.reqParams.begin_pubdate = null
+        this.reqParams.end_pubdate = null
+      }
+    },
+    handleEdit (id) {
+      // this.$router.push('/publish?id=' + id)
+      this.$router.push({ path: '/publish', query: { id } })
     }
   }
 }

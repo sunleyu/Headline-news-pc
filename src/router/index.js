@@ -6,6 +6,7 @@ import Welcome from '@/views/welcome'
 import Article from '@/views/article'
 import NotFound from '@/views/notFound'
 import local from '@/utils/store'
+import publish from '@/views/publish'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -17,7 +18,9 @@ const router = new VueRouter({
         // 欢迎
         { path: '/', component: Welcome },
         // 文章管理
-        { path: '/article', component: Article }
+        { path: '/article', component: Article },
+        // 文章发布
+        { path: '/publish', component: publish }
       ]
     },
     {
