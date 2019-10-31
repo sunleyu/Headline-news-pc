@@ -2,6 +2,7 @@
   <div>
     <el-card>
       <div slot="header" class="clearfix">
+        <!-- 填插槽 填坑 -->
         <my-bread>内容管理</my-bread>
       </div>
       <el-form label-width="80px" size="small">
@@ -18,10 +19,10 @@
         <el-form-item label="频道:">
           <el-select v-model="reqParams.channel_id" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in ChannelOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -42,40 +43,86 @@
       </el-form>
     </el-card>
     <!-- //使用page组件 -->
-    <page >
+    <!-- <page >
       <template v-slot:content="scope">{{allData.pn}}</template>
       <div slot="content" slot-scope='scope'>{{scope.pn+scope.test}}</div>
-      <!-- <div slot="content" slot-scope='allData'>{{allData.test}}</div> -->
       <div slot="footer">456</div>
-    </page>
-
+    </page>-->
+    <el-card>
+      <div slot="header">
+        <span>根据筛选条件共查询到 {{total}}条结果</span>
+      </div>
+      <el-table :data="articlesList">
+        <el-table-column label="封面">
+          <template slot-scope="scope">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="scope.row.cover.images[0]"
+              fit="fill"
+            ></el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="标题" prop="title"></el-table-column>
+        <el-table-column label="状态" prop="status">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status===0" type="info">草稿</el-tag>
+            <el-tag v-if="scope.row.status===1">待审核</el-tag>
+            <el-tag v-if="scope.row.status===2" type="success">审核通过</el-tag>
+            <el-tag v-if="scope.row.status===3" type="warning">审核失败</el-tag>
+            <el-tag v-if="scope.row.status===4" type="danger">已删除</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="发布时间" prop="pubdate"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
+    </el-card>
   </div>
 </template>
 
 <script>
-import Page from '@/test'
+// import Page from '@/test'
 export default {
   // 一个组件在另一个组件中使用需要注册
-  components: { Page },
+  // components: { Page },
   data () {
     return {
       reqParams: {
         status: null,
         channel_id: null,
         begin_pubdate: null,
-        end_pubdate: null
+        end_pubdate: null,
+        page: 1,
+        per_page: 20
       },
-      options: [
-        {
-          value: '选项1',
-          label: 'java'
-        },
-        {
-          value: '选项2',
-          label: 'web'
-        }
-      ],
-      dateArr: []
+      dateArr: [],
+      articlesList: [],
+      ChannelOptions: [],
+      total: 0
+    }
+  },
+  created () {
+    this.getChannelOptions()
+    this.getArticles()
+  },
+  methods: {
+    async getChannelOptions () {
+      const {
+        data: { data }
+      } = await this.$http.get('channels')
+      this.ChannelOptions = data.channels
+    },
+    async getArticles () {
+      const {
+        data: { data }
+      } = await this.$http.get('articles', { params: this.reqParams })
+      this.articlesList = data.results
+      this.total = data.total_count
     }
   }
 }
