@@ -21,7 +21,8 @@
               :class="{red:item.is_collected}"
               @click="toggleStatus(item)"
             ></span>
-            <span class="el-icon-delete"></span>
+
+            <span class="el-icon-delete" @click="delImages(item)"></span>
           </div>
         </div>
         <!-- 分页 -->
@@ -81,6 +82,19 @@ export default {
       console.log(item.is_collected)
       console.log(data.collect)
       this.$message.success((data.collect ? '添加收藏' : '取消收藏') + '成功')
+    },
+    delImages (item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.delete(`user/images/${item.id}`)
+        this.$message.success('删除成功')
+        this.getImages()
+      }).catch(() => {
+        // 点击了取消
+      })
     }
   }
 }
