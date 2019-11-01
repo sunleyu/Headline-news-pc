@@ -17,14 +17,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道:">
-          <el-select v-model="reqParams.channel_id" clearable placeholder="请选择">
-            <el-option
-              v-for="item in ChannelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+           <my-channel v-model='reqParams.channel_id'></my-channel>
         </el-form-item>
         <el-form-item label="日期:">
           <div class="block">
@@ -112,7 +105,6 @@ export default {
       },
       dateArr: [],
       articlesList: [],
-      ChannelOptions: [],
       total: 0
     }
   },

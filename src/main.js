@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 // 导入element-ui
-import plugin from '@/components'
+import plugin from '@/components' // 插件
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from '@/router'

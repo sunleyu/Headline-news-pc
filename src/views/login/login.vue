@@ -30,7 +30,7 @@
 import local from '@/utils/store'
 export default {
   data () {
-    // 校验手机号
+    // 自定义校验手机号
     const checkMobile = (rule, value, callback) => {
       if (/^1[3-9]\d{9}$/.test(value)) {
         return callback()
@@ -53,10 +53,10 @@ export default {
       checkLogin: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' }, // 基本校验
-          { validator: checkMobile, trigger: 'blur' }
+          { validator: checkMobile, trigger: 'blur' } // 自定义校验
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' }, // 自定义校验
+          { required: true, message: '请输入验证码', trigger: 'blur' },
           { len: 6, message: '验证码不正确', trigger: 'blur' }
           // { validator: checkCode, trigger: 'blur' }
         ]
