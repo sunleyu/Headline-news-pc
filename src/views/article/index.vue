@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-article">
     <el-card>
       <div slot="header" class="clearfix">
         <!-- 填插槽 填坑 -->
