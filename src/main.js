@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from '@/router'
 import axios from '@/api'
+import '@/style/index.less'
 // 使用插件
 Vue.use(plugin)
 // 使用自定义全局组件(插件)

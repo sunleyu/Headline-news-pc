@@ -10,7 +10,20 @@
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
-        <el-button type="success" style="float:right" size="small">成功按钮</el-button>
+        <el-button type="success" style="float:right" size="small" @click="dialogVisible=true">添加素材</el-button>
+        <!-- //添加素材 -->
+          <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
+        <el-upload
+          class="avatar-uploader"
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+          v-if="dialogVisible"
+          :before-upload="beforeAvatarUpload"
+          :on-success="handleAvatarSuccess"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        </el-dialog>
       </div>
       <div class="img_list">
         <div class="img_item" v-for="item in images" :key="item.id">
@@ -50,7 +63,9 @@ export default {
         per_page: 10
       },
       images: [],
-      total: null
+      total: null,
+      dialogVisible: false,
+      imageUrl: ''
     }
   },
   created () {
@@ -88,13 +103,25 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$http.delete(`user/images/${item.id}`)
-        this.$message.success('删除成功')
-        this.getImages()
-      }).catch(() => {
-        // 点击了取消
       })
+        .then(() => {
+          this.$http.delete(`user/images/${item.id}`)
+          this.$message.success('删除成功')
+          this.getImages()
+        })
+        .catch(() => {
+          // 点击了取消
+        })
+    },
+    handleAvatarSuccess (res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      return isJPG
     }
   }
 }
@@ -134,4 +161,5 @@ export default {
     }
   }
 }
+
 </style>
