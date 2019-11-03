@@ -23,6 +23,7 @@ axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
   // 拦截成功
   const user = local.getUser() || {}
+
   // 添加请求头
   config.headers.Authorization = `Bearer ${user.token}`
   return config

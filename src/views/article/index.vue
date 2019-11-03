@@ -17,6 +17,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道:">
+          <!--  reqParams.channel_id相当于传到子组件value-->
+           <!-- v-model本质： 绑定value属性  绑定了input事件 -->
            <my-channel v-model='reqParams.channel_id'></my-channel>
         </el-form-item>
         <el-form-item label="日期:">

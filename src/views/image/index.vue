@@ -10,15 +10,17 @@
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
-        <el-button type="success" style="float:right" size="small" @click="dialogVisible=true">添加素材</el-button>
+        <el-button type="success" style="float:right" size="small" @click="open">添加素材</el-button>
         <!-- //添加素材 -->
           <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
+        <!--    action为   上传文件的接口地址 el-upload默认请求为post -->
         <el-upload
           class="avatar-uploader"
           action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
-          v-if="dialogVisible"
-          :before-upload="beforeAvatarUpload"
-          :on-success="handleAvatarSuccess"
+          name="image"
+          :headers="headers"
+          :on-success="handleSuccess"
+          :show-file-list="false"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -53,6 +55,8 @@
 </template>
 
 <script>
+import local from '@/utils/store'
+
 export default {
   data () {
     return {
@@ -65,13 +69,28 @@ export default {
       images: [],
       total: null,
       dialogVisible: false,
-      imageUrl: ''
+      imageUrl: null,
+      headers: {
+        Authorization: `Bearer ${local.getUser().token}`
+      }
     }
   },
   created () {
     this.getImages()
   },
   methods: {
+    open () {
+      this.dialogVisible = true
+      this.imageUrl = null
+    },
+    handleSuccess (res) {
+      this.imageUrl = res.data.url
+      this.$message.success('上传成功')
+      window.setTimeout(() => {
+        this.dialogVisible = false
+        this.getImages()
+      }, 2000)
+    },
     async getImages () {
       const {
         data: { data }
@@ -112,16 +131,6 @@ export default {
         .catch(() => {
           // 点击了取消
         })
-    },
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      return isJPG
     }
   }
 }
