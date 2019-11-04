@@ -80,16 +80,49 @@ export default {
       }
     }
   },
-  // 在组件初始化 判断当前的操作行为  获取文章的数据
-  created () {
-    // 判断当前是否是编辑跳过来的,如果是则路由上有id
-    const articleId = this.$route.query.id
-    if (articleId) {
-      // 获取当前文章信息
-      this.getArticle(articleId)
+  // // 在组件初始化 判断当前的操作行为  获取文章的数据
+  // created () {
+  //   // 判断当前是否是编辑跳过来的,如果是则路由上有id
+  //   const articleId = this.$route.query.id
+  //   if (articleId) {
+  //     // 获取当前文章信息
+  //     this.getArticle(articleId)
+  //   }
+  // },
+  // 当路由规则没有发生改变的时候，组件是不会重新初始化
+  // 只有组件初始化的时候才会只会执行一次。
+  // 监听地址栏参数的变化，执行下面代码
+  watch: {
+    // data = {a:{b:10}}  'a.b':function(){}
+    // （只要是this能够获取到的数据）字段名称：function(newVal,oldVal){ //当数据改变就会执行  }
+    '$route.query.id': function () {
+      this.toggleArticleStatus()
     }
   },
+  created () {
+    this.toggleArticleStatus()
+  },
   methods: {
+    // 切换发布与修改
+    toggleArticleStatus () {
+    // 判断当前是否是编辑
+      const articleId = this.$route.query.id
+      if (articleId) {
+      // 获取当前文章信息
+        this.getArticle(articleId)
+      } else {
+      // 重置数据不能为空对象  模版中 articleForm.cover.images
+        this.articleForm = {
+          title: null,
+          content: null,
+          cover: {
+            type: 1,
+            images: []
+          },
+          channel_id: null
+        }
+      }
+    },
     async getArticle (id) {
       const { data: { data } } = await this.$http.get('articles/' + id)
       // 表单填充  面包屑文字   按钮文字
@@ -97,6 +130,7 @@ export default {
     },
     async publishBtn (draft) {
       // 发表 存入草稿
+      // 斜杠后面是路径传参，问号后面是query传参,逗号后面是body请求体传参
       await this.$http.post(`articles?draft=${draft}`, this.articleForm)
       this.$message.success(draft ? '存入草稿成功' : '发表成功')
       // 去内容管理

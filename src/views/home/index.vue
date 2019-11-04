@@ -46,6 +46,7 @@
       <el-header>
         <span class="el-icon-s-fold icon" @click="toggleMenu"></span>
         <span class="text">未来万里晴空</span>
+        <!-- command是ele-ui下拉菜单自带方法 -->
         <el-dropdown class="dropdown"  @command="handleClick">
           <span class="el-dropdown-link">
             <img class="headIcon" :src="userInfo.photo" alt />
@@ -77,6 +78,7 @@ export default {
       userInfo: {}
     }
   },
+  // 实例创建后页面渲染前执行
   created () {
     const user = local.getUser() || ''
     this.userInfo.name = user.name

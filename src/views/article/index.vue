@@ -2,7 +2,7 @@
   <div class="container-article">
     <el-card>
       <div slot="header" class="clearfix">
-        <!-- 填插槽 填坑 -->
+        <!-- 面包屑 填插槽 填坑 -->
         <my-bread>内容管理</my-bread>
       </div>
       <el-form label-width="80px" size="small">
@@ -49,6 +49,7 @@
       <div slot="header">
         <span>根据筛选条件共查询到 {{total}}条结果</span>
       </div>
+      <!-- 表格显示 -->
       <el-table :data="articlesList">
         <el-table-column label="封面">
           <template slot-scope="scope">
@@ -77,6 +78,8 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <!-- current-change事件 currentPage(当前页) 改变时会触发 -->
       <el-pagination
         style="margin-top:20px"
         background
@@ -153,7 +156,7 @@ export default {
       }
     },
     handleEdit (id) {
-      // this.$router.push('/publish?id=' + id)
+      // this.$router.push('/publish?id=' + id)  路径参数
       this.$router.push({ path: '/publish', query: { id } })
     },
     async handleDelete (id) {

@@ -11,7 +11,7 @@
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
         <el-button type="success" style="float:right" size="small" @click="open">添加素材</el-button>
-        <!-- //添加素材 -->
+        <!-- //添加素材 对话框 -->
           <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
         <!--    action为   上传文件的接口地址 el-upload默认请求为post -->
         <el-upload
@@ -97,6 +97,7 @@ export default {
       this.reqParams.page = 1
       this.getImages()
     },
+    // 收藏状态切换
     async toggleStatus (item) {
       const {
         data: { data }

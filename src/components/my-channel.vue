@@ -1,5 +1,7 @@
 <template>
+<!-- 频道组件 -->
 <!-- :value 只能接收value不可以修改 -->
+<!-- change ele-ui自带事件 选中值发生变化时触发 -->
   <el-select :value="value"  @change="fn"  clearable placeholder="请选择">
     <el-option v-for="item in channelOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
   </el-select>
@@ -17,7 +19,7 @@ export default {
     this.getChannelOptions()
   },
   methods: {
-    // 获取素材
+    // 获取频道
     async getChannelOptions () {
       const {
         data: { data }

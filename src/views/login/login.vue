@@ -66,6 +66,7 @@ export default {
   methods: {
     // 校验整体表单
     submitForm () {
+      // element-ui提供validate方法对整个表单进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，
       this.$refs['form'].validate(async valid => {
         // if (valid) {
         //   this.$http.post('authorizations', this.loginForm).then((res) => {
@@ -81,9 +82,11 @@ export default {
         // }
         if (valid) {
           try {
+            // 登录验证
             const {
               data: { data }
             } = await this.$http.post('authorizations', this.loginForm)
+            // 存储token
             local.setUser(data)
             this.$router.push('/')
           } catch (e) {

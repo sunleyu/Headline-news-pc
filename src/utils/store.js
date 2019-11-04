@@ -1,6 +1,7 @@
 // 封装的操作本地存贮的模块
 // 存储用户相关api
 // 约定key key=toutiao
+// 从服务器存储token 获取删除token
 const key = 'toutiao'
 const local = {
   // 存储

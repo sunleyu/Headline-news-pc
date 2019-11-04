@@ -1,4 +1,5 @@
 <template>
+<!--  -->
   <div class="my-image">
     <!-- 按钮 -->
     <div class="btn" @click="btn">
