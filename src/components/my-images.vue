@@ -2,11 +2,11 @@
   <div class="my-image">
     <!-- 按钮 -->
     <div class="btn" @click="btn">
-      <img src="../assets/default.png" alt />
+      <img :src="value||btnImage"/>
     </div>
     <el-dialog :visible.sync="dialogVisible">
-      <el-tabs type="border-card">
-        <el-tab-pane label="素材库">
+      <el-tabs type="border-card" v-model="activeName">
+        <el-tab-pane label="素材库" name="image">
           <div style="margin-bottom:20px">
             <el-radio-group v-model="reqParams.collect" size="small" @change="toggleList">
               <el-radio-button :label="false">全部</el-radio-button>
@@ -20,14 +20,8 @@
               v-for="item in images"
               :key="item.id"
               :class="{selected: selectedImageUrl === item.url}"
-                @click="selectedImage(item.url)"
-            >
+                @click="selectedImage(item.url)"          >
               <img :src="item.url" />
-              <div class="footer" v-if="!reqParams.collect">
-                <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
-
-                <span class="el-icon-delete"></span>
-              </div>
             </div>
             <!-- 分页 -->
             <el-pagination
@@ -40,7 +34,7 @@
             ></el-pagination>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="上传文件">
+        <el-tab-pane label="上传文件" name="upload">
           <el-upload
             class="avatar-uploader"
             action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
@@ -49,14 +43,14 @@
             :on-success="handleSuccess"
             :show-file-list="false"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button >取 消</el-button>
+        <el-button type="primary" @click="successBtn">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -64,7 +58,9 @@
 
 <script>
 import local from '@/utils/store'
+import btnImage from '../assets/default.png'
 export default {
+  props: ['value'],
   data () {
     return {
       reqParams: {
@@ -76,8 +72,10 @@ export default {
       images: [],
       total: null,
       dialogVisible: false,
-      imageUrl: null,
+      uploadImageUrl: null,
+      btnImage: btnImage,
       selectedImageUrl: null,
+      activeName: 'image',
       headers: {
         Authorization: `Bearer ${local.getUser().token}`
       }
@@ -87,6 +85,23 @@ export default {
     this.getImages()
   },
   methods: {
+    successBtn () {
+      if (this.activeName === 'image') {
+        if (!this.selectedImageUrl) {
+          return this.$message.warning('请选择图片')
+        }
+        // this.btnImage = this.selectedImageUrl
+        this.$emit('input', this.selectedImageUrl)
+        this.dialogVisible = false
+      } else {
+        if (!this.uploadImageUrl) {
+          return this.$message.warning('请上传图片')
+        }
+        // this.btnImage = this.uploadImageUrl
+        this.$emit('input', this.uploadImageUrl)
+        this.dialogVisible = false
+      }
+    },
     async getImages () {
       const {
         data: { data }
@@ -96,15 +111,11 @@ export default {
     },
     btn () {
       this.dialogVisible = true
-      this.imageUrl = null
+      this.uploadImageUrl = null
     },
     handleSuccess (res) {
-      this.imageUrl = res.data.url
+      this.uploadImageUrl = res.data.url
       this.$message.success('上传成功')
-      window.setTimeout(() => {
-        this.dialogVisible = false
-        this.getImages()
-      }, 2000)
     },
     pager (newPage) {
       this.reqParams.page = newPage
@@ -158,5 +169,9 @@ export default {
         center / 50px 50px;
     }
   }
+}
+.btn img{
+  width: 140px;
+  height: 140px;
 }
 </style>

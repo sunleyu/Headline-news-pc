@@ -2,7 +2,7 @@
   <div class="container-pubish">
     <el-card>
       <div slot="header">
-        <my-bread>发布文章</my-bread>
+        <my-bread>{{$route.query.id?'修改':'发布'}}文章</my-bread>
       </div>
       <el-form label-width="80px">
         <el-form-item label="标题:">
@@ -14,23 +14,30 @@
         </el-form-item>
         <el-form-item label="封面:">
           <template>
-            <el-radio-group v-model="articleForm.cover.type">
+            <el-radio-group v-model="articleForm.cover.type" @change="articleForm.cover.images=[]">
               <el-radio :label="0">无图</el-radio>
               <el-radio :label="1">一张</el-radio>
               <el-radio :label="3">三张</el-radio>
               <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
-            <div>
-              <my-image></my-image>
+            <div v-if="articleForm.cover.type===1">
+              <my-image v-model="articleForm.cover.images[0]"></my-image>
+            </div>
+            <div v-if="articleForm.cover.type===3">
+              <my-image v-for="i in 3" :key=i v-model="articleForm.cover.images[i-1]"></my-image>s
             </div>
           </template>
         </el-form-item>
         <el-form-item label="频道:">
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary">发表</el-button>
-          <el-button>存入草稿</el-button>
+       <el-form-item v-if="$route.query.id">
+          <el-button type="success" @click="update(false)">修改</el-button>
+          <el-button  @click="update(true)">存入草稿</el-button>
+        </el-form-item>
+        <el-form-item v-else>
+          <el-button type="primary" @click="publishBtn(false)">发表</el-button>
+          <el-button  @click="publishBtn(true)">存入草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -53,7 +60,8 @@ export default {
         title: null,
         content: null,
         cover: {
-          type: 0
+          type: 0,
+          images: []
         },
         channel_id: null
       },
@@ -63,13 +71,45 @@ export default {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote', 'code-block'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
             ['image']
           ]
         }
       }
+    }
+  },
+  // 在组件初始化 判断当前的操作行为  获取文章的数据
+  created () {
+    // 判断当前是否是编辑跳过来的,如果是则路由上有id
+    const articleId = this.$route.query.id
+    if (articleId) {
+      // 获取当前文章信息
+      this.getArticle(articleId)
+    }
+  },
+  methods: {
+    async getArticle (id) {
+      const { data: { data } } = await this.$http.get('articles/' + id)
+      // 表单填充  面包屑文字   按钮文字
+      this.articleForm = data
+    },
+    async publishBtn (draft) {
+      // 发表 存入草稿
+      await this.$http.post(`articles?draft=${draft}`, this.articleForm)
+      this.$message.success(draft ? '存入草稿成功' : '发表成功')
+      // 去内容管理
+      this.$router.push('/article')
+    },
+    // 修改
+    async update (draft) {
+      // 修改 存入草稿
+      await this.$http.put(`articles/${this.articleForm.id}?draft=${draft}`, this.articleForm)
+      // 提示
+      this.$message.success(draft ? '存入草稿成功' : '修改成功')
+      // 去内容管理
+      this.$router.push('/article')
     }
   }
 }

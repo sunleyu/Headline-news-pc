@@ -30,15 +30,6 @@
       <div class="img_list">
         <div class="img_item" v-for="item in images" :key="item.id">
           <img :src="item.url" alt />
-          <div class="footer" v-if="!reqParams.collect">
-            <span
-              class="el-icon-star-off"
-              :class="{red:item.is_collected}"
-              @click="toggleStatus(item)"
-            ></span>
-
-            <span class="el-icon-delete" @click="delImages(item)"></span>
-          </div>
         </div>
         <!-- 分页 -->
         <el-pagination
