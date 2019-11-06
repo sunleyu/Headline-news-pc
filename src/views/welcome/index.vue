@@ -7,12 +7,13 @@
       @open="handleOpen"
       @close="handleClose">
       <el-submenu index="1" >
-        <template slot="title"  ref="show">
+        <template slot="title">
           <i class="el-icon-location"></i>
           <span>导航一</span>
         </template>
         <el-menu-item-group>
           <el-menu-item index="1-1">选项1</el-menu-item>
+
           <el-menu-item index="1-2">选项2</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -22,6 +23,7 @@
       </el-menu-item>
 
     </el-menu>
+
   </div>
 </template>
 
@@ -47,15 +49,17 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
+
   }
 }
 </script>
 <style scoped lang='less'>
-img {
-  display: block;
-  margin: 0 auto;
-}
-.show{
-  border-left: 2px solid blue
-}
+// img {
+//   display: block;
+//   margin: 0 auto;
+// }
+// .el-submenu .is-active {
+//     color: #409EFF;
+//     border-right: 4px solid #409EFF;
+// }
 </style>
