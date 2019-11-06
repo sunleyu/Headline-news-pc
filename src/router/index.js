@@ -6,9 +6,10 @@ import Welcome from '@/views/welcome'
 import Article from '@/views/article'
 import NotFound from '@/views/notFound'
 import local from '@/utils/store'
-import publish from '@/views/publish'
+import Publish from '@/views/publish'
 import Image from '@/views/image'
 import Comment from '@/views/comment'
+import Setting from '@/views/setting'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -23,9 +24,11 @@ const router = new VueRouter({
         // 素材管理
         { path: '/image', component: Image },
         // 文章发布
-        { path: '/publish', component: publish },
+        { path: '/publish', component: Publish },
         // 评论管理
-        { path: '/comment', component: Comment }
+        { path: '/comment', component: Comment },
+        // 个人设置
+        { path: '/setting', component: Setting }
       ]
     },
     {

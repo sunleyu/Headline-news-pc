@@ -70,12 +70,16 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus'
 import local from '@/utils/store.js'
 export default {
   data () {
     return {
       isCollapse: true,
-      userInfo: {}
+      userInfo: {
+        name: '',
+        photo: ''
+      }
     }
   },
   // 实例创建后页面渲染前执行
@@ -83,6 +87,10 @@ export default {
     const user = local.getUser() || ''
     this.userInfo.name = user.name
     this.userInfo.photo = user.photo
+    eventBus.$on('B2A', (data) => {
+      this.userInfo.name = data.name
+      this.userInfo.photo = data.photo
+    })
   },
   methods: {
     toggleMenu () {
