@@ -79,11 +79,17 @@ export default {
       user.name = name
       local.setUser(user)
     },
-    uploadPhoto ({ file }) {
+    async uploadPhoto ({ file }) {
       // 通过FormData构造函数创建一个空对象
-      var formdata = new FormData()
+      const formData = new FormData()
       // 可以通过append()方法来追加数据
-      formdata.append('photo', file)
+      formData.append('photo', file)
+      const { data: { data } } = await this.$http.patch('user/photo', formData)
+      this.$message.success('上传成功')
+      this.userInfo.photo = data.photo
+      const user = local.getUser()
+      user.photo = data.photo
+      local.setUser(user)
     }
   }
 }
