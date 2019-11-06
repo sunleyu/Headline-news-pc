@@ -10,6 +10,7 @@ import Publish from '@/views/publish'
 import Image from '@/views/image'
 import Comment from '@/views/comment'
 import Setting from '@/views/setting'
+import Fans from '@/views/fans'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -28,7 +29,9 @@ const router = new VueRouter({
         // 评论管理
         { path: '/comment', component: Comment },
         // 个人设置
-        { path: '/setting', component: Setting }
+        { path: '/setting', component: Setting },
+        // 个人设置
+        { path: '/fans', component: Fans }
       ]
     },
     {
